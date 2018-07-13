@@ -2,6 +2,7 @@ package com.example.RestController;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,12 +56,24 @@ public class FieldController {
 	}
 	@RequestMapping(value = "delete/{idField}", method=RequestMethod.DELETE )
 	public String deleteField(@PathVariable("idField") int id) {
-			System.out.println(id);
 				service.deleteField(id);
 				String s= "OK";
 				return s;
 	
 	}
+	
+	@RequestMapping(value = "deleteTariff/{idTariff}/field/{idField}", method=RequestMethod.DELETE )
+	public String deleteTariff(@PathVariable("idTariff") int idTariff, @PathVariable("idField") long idField) {
+		Field field= service.findOneById(idField);
+		Tariff tariff= tService.findOne(idTariff);
+		field.getTariffs().remove(tariff);
+		service.save(field);
+		//tService.delete(idTariff);
+		String s= "OK";
+			return s;
+	
+	}
+	
 	@RequestMapping(value = "add", method=RequestMethod.POST)
 	public @ResponseBody String addFielldAndTariff(@RequestBody Tariff tariff, @RequestParam(value = "id") long id) {	
 		tariff.setId((tService.getMaxId()+1));

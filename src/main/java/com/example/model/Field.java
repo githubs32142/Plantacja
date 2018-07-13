@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -44,7 +44,9 @@ public class Field implements Serializable{
 	@ManyToMany
 	@JoinTable(name = "taryfy_pola", joinColumns = @JoinColumn(name = "id_pola"), inverseJoinColumns = @JoinColumn(name = "id_taryfy"))
  	List<Tariff> tariffs= new ArrayList<>();
-
+	
+	@OneToMany(mappedBy="field")
+	List<Result> results = new ArrayList<>();
     
 	public List<Tariff> getTariffs() {
 		return tariffs;
@@ -86,9 +88,14 @@ public class Field implements Serializable{
 		this.provider = provider;
 	}
 
-	
+	public List<Result> getResults() {
+		return results;
+	}
 
-	
+	public void setResults(List<Result> results) {
+		this.results = results;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -97,6 +104,8 @@ public class Field implements Serializable{
 		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((provider == null) ? 0 : provider.hashCode());
+		result = prime * result + ((results == null) ? 0 : results.hashCode());
+		result = prime * result + ((tariffs == null) ? 0 : tariffs.hashCode());
 		return result;
 	}
 
@@ -125,26 +134,37 @@ public class Field implements Serializable{
 			if (other.provider != null)
 				return false;
 		} else if (!provider.equals(other.provider))
-			return false;;
+			return false;
+		if (results == null) {
+			if (other.results != null)
+				return false;
+		} else if (!results.equals(other.results))
+			return false;
+		if (tariffs == null) {
+			if (other.tariffs != null)
+				return false;
+		} else if (!tariffs.equals(other.tariffs))
+			return false;
 		return true;
 	}
 
-	public Field(String field, Double area, Provider provider) {
-		
-		this.fieldName = field;
+	@Override
+	public String toString() {
+		return "Field [id=" + id + ", fieldName=" + fieldName + ", area=" + area + ", provider=" + provider
+				+ ", tariffs=" + tariffs + ", results=" + results + "]";
+	}
+
+	public Field(String fieldName, Double area, Provider provider, List<Tariff> tariffs, List<Result> results) {
+		this.fieldName = fieldName;
 		this.area = area;
 		this.provider = provider;
+		this.tariffs = tariffs;
+		this.results = results;
 	}
 
-	public Field( Provider provider) {
-		this.provider = provider;
-	}
 	public Field() {
-		
-		// TODO Auto-generated constructor stub
 	}
 
 	
-	 
-	
+
 }

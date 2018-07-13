@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.model.Field;
+import com.example.model.Tariff;
 
 @Repository
 public interface FieldRepository extends JpaRepository<Field, Long>{
 	@Query("select t from Field t where t.provider.id= ?")
 	public List<Field> findByIdProvider(long idProvider);
 	
-	@Query("select t from Field t where t.id= ?")
-	public Field findById(long id);
+
 }

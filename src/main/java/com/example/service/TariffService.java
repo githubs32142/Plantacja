@@ -33,4 +33,11 @@ public class TariffService {
 		public List<Tariff> getListTariff(long idField){
 			return repo.getTariff(idField);
 		}
+		public void delete(int id) {
+			repo.delete(id);
+		}
+		
+		public Tariff findOne(int id) {
+			return repo.findOne(id);
+		}
 }

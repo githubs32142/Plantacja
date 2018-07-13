@@ -1,7 +1,6 @@
 package com.example.service;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class FieldService {
 		return field.findByIdProvider(idProvider);
 	}
 	public Field findOneById(long id) {
-		return field.findById(id);
+		return field.findOne(id);
 	}
 	public void deleteField(long id) {
 
@@ -37,5 +36,9 @@ public class FieldService {
 			f=findOneById(id);
 			f.getTariffs().add(tariff);
 			field.save(f);
+	}
+	
+	public void save(Field f) {
+		field.save(f);
 	}
 }

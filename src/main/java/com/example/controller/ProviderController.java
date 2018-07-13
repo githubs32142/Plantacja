@@ -56,21 +56,22 @@ public class ProviderController {
 	@RequestMapping(value="/addField", method = RequestMethod.GET)
 	public ModelAndView fieldHome(@RequestParam("id") long id){
 		ModelAndView modelAndView = new ModelAndView();
-	//	modelAndView.addObject("provider", service.findById(id));
-		System.out.println(service.findById(id));
+		Provider p = new Provider();
+		p=service.findById(id);
 		Field f = new Field();
-		f.setProvider(service.findById(id));
+		f.setProvider(p);
 		modelAndView.addObject("field", f);
-		modelAndView.addObject("provider", service.findById(id));
+		modelAndView.addObject("provider", p);
 		modelAndView.setViewName("admin/addField");
 		return modelAndView;
 	}
+	
 	@RequestMapping(value="/addField", method = RequestMethod.POST)
 	public ModelAndView saveField(@Valid Field field, @RequestParam(value = "idProvider") long idProvider, BindingResult bindingResult){
 		ModelAndView modelAndView = new ModelAndView();
 		field.setProvider(service.findById(idProvider));
 		service.saveField(field);
-		modelAndView.addObject("field", new Field(field.getProvider()));
+		modelAndView.addObject("field", new Field());
 		modelAndView.addObject("provider", field.getProvider());
 		modelAndView.setViewName("admin/addField");
 		return modelAndView;

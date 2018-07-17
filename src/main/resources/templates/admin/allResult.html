@@ -24,13 +24,17 @@
     <link rel="stylesheet" type="text/css" th:href="@{/assets/css/cs-skin-elastic.css}">
     <!-- <link rel="stylesheet" href="assets/css/bootstrap-select.less"> -->
     <link rel="stylesheet" type="text/css" th:href="@{/assets/scss/style.css}">
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
 </head>
-<body><aside   class="left-panel" >
+<body>
+        <!-- Left Panel -->
+    <aside   class="left-panel" >
 <div th:replace="admin/leftPanel :: left-panel">
     
 </div>
@@ -79,80 +83,94 @@
             </div>
 
         </header><!-- /header -->
-
-        <div class="breadcrumbs">
-            <div class="col-sm-4">
-                <div class="page-header float-left">
-                    <div class="page-title">
-                        <h1>Dashboard</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="page-header float-right">
-                    <div class="page-title">
-                        <ol class="breadcrumb text-right">
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Table</a></li>
-                            <li class="active">Data table</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="content mt-3">
             <div class="animated fadeIn">
                 <div class="row">
-
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <strong class="card-title">Lista Dostawców</strong>
+                    <div class="col-lg-8">
+                  <div class="card">
+                      <div class="card-header"><strong>Wyszukaj</strong><small> Wyniku</small></div>
+                      <div class="card-body card-block">
+                        <div class="form-group"><label  class=" form-control-label">Data rozpoczęcia</label>
+                            <input type="date" id="dateStart"  name="bday" placeholder="Wprowadź datę rozpoczęcia" class="form-control"></div>
+                        <div class="form-group"><label  class=" form-control-label">Data zakończenia</label>
+                             <input type="date"  id="dateEnd" placeholder="Wprowadź datę zakończenia" class="form-control">
+                          <button type="button" id="sendData"  onclick="searchData()" class="btn btn-success btn-sm">
+                          <i class="fa fa-dot-circle-o"></i> Wybierz
+                        </button>
+                      </div>
+                    </div>
+                            <strong class="card-title">Lista Taryf dla Pola</strong>
                         </div>
                         <div class="card-body">
-                  <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                    <thead>
+                  <table  class="table table-striped table-bordered" id="myTable">
+                    <thead >
                       <tr>
-                        <th>LP</th>
-                        <th>Nazwa Firmy</th>
-                        <th>Miasto</th>
-                        <th>Ulica</th>
-                        <th>Typ</th>
-                        <th>Usuń</th>
-                        <th>Dodaj działke</th>
+                        <th>Imię pracownika</th>
+                        <th>Nazwisko pracownika</th>
+                        <th>Nazwa taryfy</th>
+                        <th>Nazwa pola</th>
+                        <th>Stawka taryfy</th>
+                        <th>Czas pracy/zebrane kg</th>
+                        <th>Łączny zarobek</th>
+                        <th>Usuń wpis</th>
                       </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="provider,iterationStatus  : ${providers}">
-                        <td th:text="${iterationStatus.count}">1</td>
-                        <td th:text="${provider.nameCompany}">001</td>
-                        <td th:text="${provider.city}">Name</td>
-                        <td th:text="${provider.street}">City</td>
-                        <td th:text="${provider.type}">Country</td>
-                        <td> <a 
-                        th:href="@{/deleteProvider(id=${provider.id})}"
-                        ><i class="fa fa-times-circle"></i></a>  </td>
-                        <td> <a 
-                        th:href="@{/addField(id=${provider.id})}"
-                        ><i class="fa fa-plus"></i></a>  </td>
-                    </tr>
+                    </thead >
+                    <tbody id="bootstrap-data-table">
                     
                     </tbody>
                   </table>
-                  <div th:if="${ not delete.isEmpty()}">
-                    <div class="alert alert-success alert-dismissible fade show">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Success!</strong> This alert box could indicate a successful or positive action.
-                    </div>
-                </div>
                         </div>
-                    </div>
+    </div>
+        <div class="col-lg-4" id="demo">
+        </div>
+                  </div>
+                  </div>
                 </div>
 
-                </div>
+
             </div><!-- .animated -->
         </div><!-- .content -->
+<script>
+function searchData() {
+var dateStart=document.getElementById("dateStart").value;
+var dateEnd=document.getElementById("dateEnd").value;
+$.ajax({
+        type : "GET",
+        url : "/api/getResult/startDate/" + dateStart+"/endDate/"+dateEnd,            
+        success : function(data) {
+                    $.each(result, function(i, result){
+                        var string = "<tr><td> " + result.nameEmployee + 
+                        "</td><td> " + result.surNameEmployee +"</td> <td>"+
+                        "</td><td> " + result.nameTariff +"</td> <td>"+
+                        "</td><td> " + result.nameField +"</td> <td>"+
+                        "</td><td> " + result.rate +"</td> <td>"+
+                        "</td><td> " + result.ammount +"</td> <td>"+
+                        "</td><td> " + result.totalPrice +"</td> <td>"+
+                               '<a>' +
+                                                '<span class="fa fa-times-circle" onClick=delId('+result.idResult+','+i+','+result.idEmployee+') ></span>' +
+                                            '</a></td>'
+                        '</td>'+ 
+                        "</tr>"
+                        
+                        $('#bootstrap-data-table').append( string );
+                    });
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+                       alert("nie działa");
+        }
+    });
+
+};
+
+
+</script>
+
+  <script>
+  $( function() {
+    $( 'date' ).datepicker();
+  } );
+  </script>
 
 
     </div><!-- /#right-panel -->
@@ -161,29 +179,12 @@
 
     <!-- Right Panel -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/assets/js/popper.min.js}"></script>  
 <script th:src="@{/assets/js/vendor/jquery-2.1.4.min.js}"></script>
     <script th:src="@{/assets/js/popper.min.js}"></script>
     <script th:src="@{/assets/js/plugins.js}"></script>
     <script th:src="@{/assets/js/main.js}"></script>
-    <script src="@{assets/js/lib/data-table/datatables.min.js"></script>
-    <script src="@{assets/js/lib/data-table/dataTables.bootstrap.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/dataTables.buttons.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/buttons.bootstrap.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/jszip.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/pdfmake.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/vfs_fonts.js"}></script>
-    <script src="@{assets/js/lib/data-table/buttons.html5.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/buttons.print.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/buttons.colVis.min.js}"></script>
-    <script src="@{assets/js/lib/data-table/datatables-init.js}"></script>
-
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-          $('#bootstrap-data-table-export').DataTable();
-        } );
-    </script>
 
 </body>
 </html>

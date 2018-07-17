@@ -3,8 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:th="http://www.thymeleaf.org">
-  <head>
+    xmlns:th="http://www.thymeleaf.org"><head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Plantator System</title>
@@ -27,15 +26,20 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
+
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
 </head>
 <body>
- <aside   class="left-panel" >
+        <!-- Left Panel -->
+
+         <aside   class="left-panel" >
 <div th:replace="admin/leftPanel :: left-panel">
     
 </div>
 </aside>
+    <!-- Left Panel -->
+
     <!-- Right Panel -->
 
     <div id="right-panel" class="right-panel">
@@ -78,63 +82,64 @@
             </div>
 
         </header><!-- /header -->
-        <div class="content mt-3">
-            <div class="animated fadeIn">
+        <!-- Header-->
 
-
-                <div class="row">
-                  
-		        <form autocomplete="off" action="#" th:action="@{/addProvider}"
-                    th:object="${provider}" method="post" class="col-lg-8">
+        <div class="breadcrumbs">
+            <div class="row">
+            <div class="col-sm-12">
+                 <form autocomplete="off" action="#" th:action="@{/addEmployee}"
+                    th:object="${employee}"  method="post" class="col-lg-8">
                   <div class="col-lg-12">
                     <div class="card">
-                      <div class="card-header"><strong>Dodawanie</strong><small> firmy</small></div>
+                      <div class="card-header"><strong>Dodawanie</strong><small> pracownika</small></div>
                       <div class="card-body card-block">
-                        <div class="form-group"><label for="company" class=" form-control-label">Nazwa firmy</label>
-                            <input type="text" th:field="*{nameCompany}" placeholder="Wprowadź nzwę firmy" class="form-control"></div>
-                        <div class="form-group"><label for="vat" class=" form-control-label">Miasto</label><input type="text" th:field="*{city}" placeholder="Wprowadź miasto" class="form-control"></div>
-                        <div class="form-group"><label for="street" class=" form-control-label">Ulica</label><input type="text" 
-                            th:field="*{street}" placeholder="Wprowadź nazwę uliczy" class="form-control"></div>
-                        <div class="row form-group">
-                          <div class="col-8">
-                           <div class="col col-md-3"><label for="select" class=" form-control-label">Typ</label></div>
-                            <div class="col-12 col-md-9">
-                              <select name="select" id="select" class="form-control" th:field="*{type}" >
-                                <option value="Dostawca">Dostawca</option>
-                                <option value="Odbiorca">Odbiorca</option>
-                              </select>
-                            </div>
-                          </div>
-                          </div>
-                        </div>
-                        
-               <button type="submit" class="btn btn-success btn-sm">
+                        <div class="form-group"><label  class=" form-control-label">Imie</label>
+                             <input type="text"   th:field="*{name}" placeholder="Wprowadź imie" class="form-control">
+                        <div class="form-group"><label  class=" form-control-label">Nazwa użytkownika</label>
+                            <input type="text" th:field="*{surName}" placeholder="Wprowadź nazwę użytkownika" class="form-control"></div>
+                          <button type="submit" class="btn btn-success btn-sm">
                           <i class="fa fa-dot-circle-o"></i> Zapisz
                         </button>
                       </div>
                     </div>
-                     
+                                        <div th:if="${#strings.toString(successMessage)} == 'yes'"   class="card-body">
+                                        <div class="sufee-alert alert with-close alert-primary alert-dismissible fade show">
+                                            <span class="badge badge-pill badge-primary">Success</span>
+                                                Pomyślnie dodano użytkownika
+                                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                     <div th:if="${#strings.toString(successMessage)} == 'no'"   class="card-body">
+                                        <div class="sufee-alert alert with-close alert-primary alert-dismissible fade show">
+                                        <span class="badge badge-pill badge-danger">ERROR</span>
+                                               <p th:text="${error}"></p>
+                                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
                          </form>
-                  </div>
-                  </div>
-                </div>
-
-
-            </div><!-- .animated -->
-        </div><!-- .content -->
+            </div>
+        </div>
+        </div>
+<script type="text/javascript" th:src="@{/assets/js/popper.min.js}"></script>  
+<script th:src="@{/assets/js/vendor/jquery-2.1.4.min.js}"></script>
+    <script th:src="@{/assets/js/popper.min.js}"></script>
+    <script th:src="@{/assets/js/plugins.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+        <!--  Chart js -->
+    <script th:src="@{/assets/js/lib/chart-js/Chart.bundle.js}"></script>
+    <script th:src="@{/assets/js/lib/chart-js/chartjs-init.js}"></script>
+    
 
 
     </div><!-- /#right-panel -->
 
     <!-- Right Panel -->
 
-    <!-- Right Panel -->
 
-<script type="text/javascript" th:src="@{/assets/js/popper.min.js}"></script>  
-<script th:src="@{/assets/js/vendor/jquery-2.1.4.min.js}"></script>
-    <script th:src="@{/assets/js/popper.min.js}"></script>
-    <script th:src="@{/assets/js/plugins.js}"></script>
-    <script th:src="@{/assets/js/main.js}"></script>
 
 </body>
 </html>

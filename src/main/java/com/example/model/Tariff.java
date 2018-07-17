@@ -127,8 +127,8 @@ public class Tariff implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Tariff [id=" + id + ", nameTariff=" + nameTariff + ", rate=" + rate + ", fields=" + fields
-				+ ", results=" + results + "]";
+		return "Tariff [id=" + id + ", nameTariff=" + nameTariff + ", rate=" + rate 
+				+ "]";
 	}
 
 	public Tariff(String nameTariff, Double rate, List<Field> fields, List<Result> results) {

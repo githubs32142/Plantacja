@@ -24,7 +24,9 @@
     <link rel="stylesheet" type="text/css" th:href="@{/assets/css/cs-skin-elastic.css}">
     <!-- <link rel="stylesheet" href="assets/css/bootstrap-select.less"> -->
     <link rel="stylesheet" type="text/css" th:href="@{/assets/scss/style.css}">
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
@@ -85,33 +87,41 @@
             <div class="animated fadeIn">
                 <div class="row">
                     <div class="col-lg-8">
+                        <label for="company" class=" form-control-label">Pracownik</label>
+                         <select  name="employee" id="employee" class="form-control"  >
+                                <option th:each="employee  : ${employees}" th:value="${employee.id}" th:text="${employee.name} +' '+ ${employee.surName}">Dostawca</option>
+                        </select>
+                        <br>
                     <label for="company" class=" form-control-label">Nazwa dostawcy</label>
                          <select  name="select" id="select" class="form-control" onchange="showField()" >
                                 <option th:each="provider  : ${providers}" th:value="${provider.id}" th:text="${provider.nameCompany}">Dostawca</option>
                         </select>   
                         <br>
-                        <label for="company" class=" form-control-label">Nazwa Pola Dostawcy</label>
-                         <select   id="fieldsSelect" class="form-control"  >
+                        <label for="company"  class=" form-control-label">Nazwa Pola Dostawcy</label>
+                         <select   id="fieldsSelect" class="form-control" onchange="showTariff()" >
                                
                         </select> 
                         <br>
-                        <form class="col-lg-8">
-                  <div class="col-lg-12">
-                    <div class="card">
-                      <div class="card-header"><strong>Dodawanie</strong><small> taryfy działki</small></div>
+                        <label for="company"  class=" form-control-label">Nazwa Taryfy </label>
+                         <select   id="tariffSel" class="form-control" >
+                               
+                        </select> 
+                        <br>  
+                        <form >
+                  <div class="card">
+                      <div class="card-header"><strong>Dodawanie</strong><small> Wyniku</small></div>
                       <div class="card-body card-block">
-                        <div class="form-group"><label  class=" form-control-label">Nazwa Taryfy</label>
-                            <input type="text" id="nameTariff" placeholder="Wprowadź taryfy" class="form-control"></div>
-                        <div class="form-group"><label  class=" form-control-label">Stawka</label>
-                             <input type="number" step="0.01" id="rate" placeholder="Wprowadź stawkę godzinową/za kilogram" class="form-control">
+                        <div class="form-group"><label  class=" form-control-label">Data wykonania pracy</label>
+                            <input type="date" id="date"  name="bday" placeholder="Wprowadź taryfy" class="form-control"></div>
+                        <div class="form-group"><label  class=" form-control-label">Czas/kilogramy</label>
+                             <input type="number" step="0.01" id="price" placeholder="Wprowadź stawkę godzinową/za kilogram" class="form-control">
                           <button type="button" id="sendData"  onclick="addData()" class="btn btn-success btn-sm">
                           <i class="fa fa-dot-circle-o"></i> Zapisz
                         </button>
                       </div>
                     </div>
-                     
                          </form>
-                             
+                                       
         </div>
         <div class="col-lg-4" id="demo">
         </div>
@@ -139,37 +149,67 @@ function showField() {
             });
             }
         });
-
-
+ 
 }
+
+function showTariff() {
+    var e = document.getElementById("fieldsSelect");
+    var selField = e.options[e.selectedIndex].value;
+    $('#tariffSel').empty();
+        $.ajax({
+            type : "GET",
+            url :  "/api/field/" + selField,            
+            success: function(result){
+                 $.each(result, function(i, tariff){
+             var str = "<option value="+tariff.id+"> " + tariff.nameTariff +  
+                "</option>";
+                
+                $('#tariffSel').append( str );
+            });
+            }
+        });
+ 
+}
+
 function addData() {
-	var e = document.getElementById("fieldsSelect");
-    var allField = e.options[e.selectedIndex].value;
+    var e = document.getElementById("fieldsSelect");
+    var idField = e.options[e.selectedIndex].value;
+    var e2 = document.getElementById("employee");
+    var idEmployee = e2.options[e2.selectedIndex].value;
+    var e3 = document.getElementById("tariffSel");
+    var idTariff = e3.options[e3.selectedIndex].value;
     var formData = {
-    		id : new Number(1),
-    		nameTariff : $("#nameTariff").val(),
-    		rate : new Number($("#rate").val())
+            id : new Number(1),
+            date : document.getElementById("date").value,
+            amount : new Number($("#price").val())
 };
-    document.getElementById("demo").innerHTML = JSON.stringify(formData);
-	var developerData = {};
-	developerData["nameTariff"] = $("#nameTariff").val();
-	developerData["rate"] = $("#rate").val();
-	$.ajax({
-		type : "POST",
-		contentType : "application/json",
-		url : "/api/field/add?id=" + allField,
-		data : JSON.stringify(formData),			
-		success : function(data) {
-			alert("ok");
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-		      	       
-		}
-	});
+    $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : "/api/add/" + idEmployee+"/field/"+idField+"/tariff/"+idTariff,
+        data : JSON.stringify(formData),            
+        success : function(data) {
+            alert("ok");
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+                       
+        }
+    });
 
 }
+
+
+
+
 
 </script>
+
+  <script>
+  $( function() {
+    $( 'date' ).datepicker();
+  } );
+  </script>
+
 
     </div><!-- /#right-panel -->
 

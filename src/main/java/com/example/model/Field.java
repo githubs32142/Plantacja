@@ -150,8 +150,7 @@ public class Field implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Field [id=" + id + ", fieldName=" + fieldName + ", area=" + area + ", provider=" + provider
-				+ ", tariffs=" + tariffs + ", results=" + results + "]";
+		return "Field [id=" + id + ", fieldName=" + fieldName + ", area=" + area + "]";
 	}
 
 	public Field(String fieldName, Double area, Provider provider, List<Tariff> tariffs, List<Result> results) {
